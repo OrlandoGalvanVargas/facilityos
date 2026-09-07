@@ -12,10 +12,14 @@ concurrency:
   cancel-in-progress: true
 
 jobs:
+
   frontend-ci:
     name: Frontend Quality & Build
     runs-on: ubuntu-latest
-    if: github.event_name == 'workflow_dispatch' || contains(github.event.head_commit.modified, 'client/')
+    if: >
+      github.event_name == 'push' ||
+      github.event_name == 'workflow_dispatch' ||
+      contains(github.event.head_commit.modified, 'client/')
     defaults:
       run:
         working-directory: client
@@ -51,7 +55,11 @@ jobs:
   backend-ci:
     name: Backend Build & Tests
     runs-on: ubuntu-latest
-    if: github.event_name == 'workflow_dispatch' || contains(github.event.head_commit.modified, 'FacilityOS') || contains(github.event.head_commit.modified, 'server/')
+    if: >
+      github.event_name == 'push' ||
+      github.event_name == 'workflow_dispatch' ||
+      contains(github.event.head_commit.modified, 'FacilityOS') ||
+      contains(github.event.head_commit.modified, 'server/')
     
     steps:
       - name: Checkout repository
