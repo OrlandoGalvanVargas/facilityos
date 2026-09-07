@@ -1,0 +1,72 @@
+name: Continuous Integration
+
+on:
+  push:
+    branches: [ main, master ]
+  pull_request:
+    branches: [ main, master ]
+  workflow_dispatch:
+
+concurrency:
+  group: ${{ github.workflow }}-${{ github.ref }}
+  cancel-in-progress: true
+
+jobs:
+  frontend-ci:
+    name: Frontend Quality & Build
+    runs-on: ubuntu-latest
+    if: github.event_name == 'workflow_dispatch' || contains(github.event.head_commit.modified, 'client/')
+    defaults:
+      run:
+        working-directory: client
+
+    steps:
+      - name: Checkout repository
+        uses: actions/checkout@v4
+
+      - name: Setup Node.js
+        uses: actions/setup-node@v4
+        with:
+          node-version: 20
+          cache: 'npm'
+          cache-dependency-path: client/package-lock.json
+
+      - name: Install dependencies
+        run: npm ci
+
+      - name: Run Linter & Validation
+        run: npm run validate --if-present
+
+      - name: Run Frontend Tests
+        run: npm test -- --watch=false --passWithNoTests
+
+      - name: Verify Frontend Production Build
+        run: npm run build
+        env:
+          VITE_API_URL: /api
+          VITE_ENABLE_MOCK: "true"
+          VITE_APP_ENV: production
+
+
+  backend-ci:
+    name: Backend Build & Tests
+    runs-on: ubuntu-latest
+    if: github.event_name == 'workflow_dispatch' || contains(github.event.head_commit.modified, 'FacilityOS') || contains(github.event.head_commit.modified, 'server/')
+    
+    steps:
+      - name: Checkout repository
+        uses: actions/checkout@v4
+
+      - name: Setup .NET SDK
+        uses: actions/setup-dotnet@v4
+        with:
+          dotnet-version: '10.0.x'
+
+      - name: Restore NuGet dependencies
+        run: dotnet restore
+
+      - name: Build Solution (Release)
+        run: dotnet build --no-restore --configuration Release
+
+      - name: Run Backend Unit Tests
+        run: dotnet test --no-build --configuration Release --verbosity normal
