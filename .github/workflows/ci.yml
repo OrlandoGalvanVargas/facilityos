@@ -70,11 +70,19 @@ jobs:
         with:
           dotnet-version: '10.0.x'
 
+      - name: Locate Solution or Project files
+        run: |
+          echo "Buscando archivos .sln o .csproj en el repositorio:"
+          find . -maxdepth 4 \( -name "*.sln" -o -name "*.csproj" \)
+
       - name: Restore NuGet dependencies
-        run: dotnet restore server/FacilityOS.API/FacilityOS.API.csproj
+        run: |
+          find . -name "FacilityOS.API.csproj" -exec dotnet restore {} \;
 
       - name: Build Solution (Release)
-        run: dotnet build server/FacilityOS.API/FacilityOS.API.csproj --no-restore --configuration Release
+        run: |
+          find . -name "FacilityOS.API.csproj" -exec dotnet build {} --no-restore --configuration Release \;
 
       - name: Run Backend Unit Tests
-        run: dotnet test server/FacilityOS.API.Tests/FacilityOS.API.Tests.csproj --no-build --configuration Release --verbosity normal
+        run: |
+          find . -name "FacilityOS.API.Tests.csproj" -exec dotnet test {} --no-build --configuration Release --verbosity normal \;
