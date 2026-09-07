@@ -60,6 +60,9 @@ jobs:
       github.event_name == 'workflow_dispatch' ||
       contains(github.event.head_commit.modified, 'FacilityOS') ||
       contains(github.event.head_commit.modified, 'server/')
+    defaults:
+      run:
+        working-directory: server
     
     steps:
       - name: Checkout repository
@@ -71,10 +74,10 @@ jobs:
           dotnet-version: '10.0.x'
 
       - name: Restore NuGet dependencies
-        run: dotnet restore **/*.sln || dotnet restore **/*.csproj
+        run: dotnet restore
 
       - name: Build Solution (Release)
-        run: dotnet build --no-restore --configuration Release **/*.sln || dotnet build --no-restore --configuration Release **/*.csproj
+        run: dotnet build --no-restore --configuration Release
 
       - name: Run Backend Unit Tests
-        run: dotnet test --no-build --configuration Release --verbosity normal **/*.sln || dotnet test --no-build --configuration Release --verbosity normal **/*.csproj
+        run: dotnet test --no-build --configuration Release --verbosity normal
