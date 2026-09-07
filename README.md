@@ -13,7 +13,7 @@
 ![License](https://img.shields.io/badge/License-Proprietary-red?style=flat-square)
 ![Status](https://img.shields.io/badge/Status-Completed-brightgreen?style=flat-square)
 
-[Demo (Mock)](#demo) · [Arquitectura](#arquitectura-general) · [Backend](./server/README.md) · [Frontend](./client/README.md)
+[🔗 Sitio en vivo (Mock)](https://da802b4d.facilityos-9er.pages.dev) · [Demo](#demo) · [Arquitectura](#arquitectura-general) · [Backend](./server/README.md) · [Frontend](./client/README.md)
 
 </div>
 
@@ -54,6 +54,8 @@ Cada carpeta cuenta con su propio README detallado con instrucciones específica
 ## Demo
 
 ![Demostración de la aplicación](./docs/assets/demo.gif)
+
+🔗 **Pruébalo en vivo:** [https://da802b4d.facilityos-9er.pages.dev](https://da802b4d.facilityos-9er.pages.dev)
 
 El frontend puede probarse completamente **sin backend**, gracias a su modo mock (ver [Modo Mock vs. Modo API](#modo-mock-vs-modo-api)).
 
@@ -105,7 +107,7 @@ facilityos/
 │   ├── Dockerfile
 │   ├── docker-compose.local.yml
 │   └── README.md
-├── docks/                  # Logo, capturas
+├── docs/                    # Logo, capturas
 └── README.md                # Este archivo
 ```
 
@@ -203,7 +205,7 @@ Esto permite que el frontend se pueda desplegar y usar de forma completamente au
 
 | Servicio | Estado | Notas |
 |---|---|---|
-| **Frontend** | 🟢 Desplegado en **Cloudflare Pages** | Funciona en **modo mock** (`VITE_ENABLE_MOCK=true`). No consume la API real, ya que el backend no se mantendrá en línea de forma indefinida. |
+| **Frontend** | 🟢 Desplegado en **Cloudflare Pages**: [https://da802b4d.facilityos-9er.pages.dev](https://da802b4d.facilityos-9er.pages.dev) | Funciona en **modo mock** (`VITE_ENABLE_MOCK=true`). No consume la API real, ya que el backend no se mantendrá en línea de forma indefinida. |
 | **Backend** | ⚪ No desplegado | Listo para desplegarse: incluye Dockerfile multi-stage, migraciones automáticas (Database-as-Code) y configuración por variables de entorno. Compatible con **Render**, **Railway**, **Azure App Service / Container Apps**, o **AWS ECS / Elastic Beanstalk**, entre otros proveedores con soporte para contenedores .NET y SQL Server. |
 
 Si en algún momento se despliega el backend, basta con configurar `VITE_API_URL` y `VITE_ENABLE_MOCK=false` en el frontend para conectarlo a la API real.
